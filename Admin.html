@@ -1,0 +1,1711 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --blue:#1769aa;
+      --dark:#123b73;
+      --bg:#eef5ff;
+      --border:#e2e8f0;
+      --text:#172b4d;
+      --muted:#64748b;
+      --green:#15803d;
+      --red:#b91c1c;
+    }
+
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .header {
+      background:linear-gradient(110deg,var(--dark),var(--blue));
+      color:white;
+      padding:18px 22px;
+      box-shadow:0 3px 12px #123b7326;
+    }
+
+    .header-inner {
+      max-width:1450px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .brand { display:flex; align-items:center; gap:13px; }
+    .logo {
+      width:47px;height:47px;border-radius:12px;
+      background:#ffffff20;border:1px solid #ffffff45;
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;font-weight:800;
+    }
+    .title { font-size:23px;font-weight:700; }
+    .subtitle { font-size:13px;opacity:.9;margin-top:5px; }
+    .header-actions { display:flex;gap:8px;flex-wrap:wrap; }
+
+    .main { max-width:1450px;margin:auto;padding:20px; }
+
+    .tabs {
+      display:flex;gap:9px;flex-wrap:wrap;
+      padding:11px;background:#fff;border:1px solid var(--border);
+      border-radius:14px;margin-bottom:18px;
+      box-shadow:0 3px 12px #123b7308;
+    }
+
+    .tab {
+      border:0;border-radius:9px;padding:12px 17px;
+      background:#eaf1fb;color:var(--dark);
+      font-size:14px;font-weight:700;cursor:pointer;
+    }
+    .tab.active { background:var(--blue);color:#fff; }
+
+    .view { display:none; }
+    .view.active { display:block; }
+
+    .kpis {
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;margin-bottom:18px;
+    }
+    .kpi {
+      background:#fff;border:1px solid var(--border);
+      border-radius:14px;padding:17px;
+      box-shadow:0 3px 12px #123b7308;
+      min-width:0;
+    }
+    .kpi-label { color:var(--muted);font-size:13px;font-weight:700; }
+    .kpi-value { font-size:28px;font-weight:800;color:var(--dark);margin-top:10px; }
+    .kpi-note { font-size:12px;color:var(--muted);margin-top:5px; }
+
+    .card {
+      background:#fff;border:1px solid var(--border);
+      border-radius:15px;overflow:hidden;margin-bottom:18px;
+      box-shadow:0 3px 12px #123b7308;
+    }
+    .card-head {
+      background:linear-gradient(110deg,#123f7a,#1769aa);
+      color:#fff;padding:17px 20px;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;flex-wrap:wrap;
+    }
+    .card-title { font-size:20px;font-weight:700; }
+    .card-sub { font-size:12px;opacity:.9;margin-top:5px; }
+    .card-body { padding:18px; }
+
+    .filters {
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;margin-bottom:15px;
+    }
+    .field { min-width:0; }
+    label {
+      display:block;font-size:13px;font-weight:700;
+      color:var(--dark);margin-bottom:7px;
+    }
+
+    input,select,textarea {
+      width:100%;min-width:0;border:1px solid #cbd5e1;
+      border-radius:9px;padding:11px 12px;
+      background:#fff;color:var(--text);
+      font-family:inherit;font-size:14px;outline:none;
+    }
+    input:focus,select:focus,textarea:focus {
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px #1769aa16;
+    }
+    textarea { min-height:75px;resize:vertical; }
+
+    button,.btn {
+      border:0;border-radius:9px;padding:10px 15px;
+      background:var(--blue);color:white;
+      font-family:inherit;font-size:13px;font-weight:700;
+      cursor:pointer;text-decoration:none;display:inline-flex;
+      align-items:center;justify-content:center;gap:6px;
+    }
+    button:hover,.btn:hover { filter:brightness(.95); }
+    button:disabled { opacity:.55;cursor:wait; }
+    .btn-light { background:#eaf1fb;color:var(--dark); }
+    .btn-green { background:var(--green); }
+    .btn-red { background:var(--red); }
+    .btn-small { padding:8px 10px;font-size:12px; }
+
+    .toolbar { display:flex;gap:8px;flex-wrap:wrap;align-items:center; }
+    .table-wrap { width:100%;overflow:auto;border:1px solid var(--border);border-radius:10px; }
+    table { width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px; }
+    th {
+      background:#edf3fc;color:var(--dark);text-align:left;
+      font-weight:800;padding:12px 10px;border-bottom:1px solid var(--border);
+    }
+    td { padding:10px;border-bottom:1px solid #edf0f5;vertical-align:middle; }
+    tbody tr:hover { background:#f8fbff; }
+    td input,td select { min-width:120px;padding:8px;font-size:12px; }
+    .muted { color:var(--muted); }
+    .status {
+      display:inline-block;padding:5px 9px;border-radius:30px;
+      background:#eaf1fb;color:var(--dark);font-weight:700;font-size:11px;
+    }
+    .status-closed { background:#dcfce7;color:#166534; }
+    .status-open { background:#fee2e2;color:#991b1b; }
+    .status-progress { background:#fef3c7;color:#92400e; }
+    .empty { padding:25px;text-align:center;color:var(--muted); }
+    .message { padding:12px 14px;border-radius:9px;margin-bottom:14px;display:none; }
+    .message.error { display:block;background:#fee2e2;color:#991b1b; }
+    .message.success { display:block;background:#dcfce7;color:#166534; }
+    .loading { padding:25px;text-align:center;color:var(--muted); }
+    .count { color:var(--muted);font-size:12px;margin:10px 0; }
+    .notice { background:#fff7ed;color:#9a3412;padding:12px;border-radius:9px;margin-bottom:15px;line-height:1.5; }
+
+    @media(max-width:900px) {
+      .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media(max-width:600px) {
+      .header { padding:14px; }
+      .header-inner { align-items:flex-start; }
+      .title { font-size:19px; }
+      .subtitle { font-size:12px; }
+      .logo { width:41px;height:41px;font-size:19px; }
+      .header-actions { flex-direction:column; }
+      .main { padding:10px; }
+      .tabs { padding:8px;gap:7px; }
+      .tab { padding:11px 12px;min-width:calc(50% - 4px);font-size:13px; }
+      .kpis { gap:9px; }
+      .kpi { padding:13px; }
+      .kpi-value { font-size:24px; }
+      .filters { grid-template-columns:1fr; }
+      .card-head { padding:14px; }
+      .card-title { font-size:18px; }
+      .card-body { padding:12px; }
+      .header-actions button { padding:9px 10px; }
+    }
+    
+.technician-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: start;
+}
+
+.add-technician-inline,
+.search-technician-inline {
+  min-width: 0;
+}
+
+.toolbar-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.toolbar-controls input {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  .technician-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Premium DG Tracker 3D Theme ===== */
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
+  background: linear-gradient(135deg, #eaf2ff, #dce9ff, #f4f8ff);
+}
+
+.header {
+  background: linear-gradient(135deg, #082e67, #0877c9, #13a5d4);
+  box-shadow: 0 8px 22px rgba(0, 45, 100, 0.32);
+  border-bottom: 3px solid #49c6ff;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.header p {
+  font-size: 16px;
+}
+
+.tabs {
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  box-shadow: 0 5px 14px rgba(18, 65, 130, 0.12);
+}
+
+.tab {
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(20, 70, 140, 0.18);
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #0879ed, #0752b5);
+  color: #fff;
+  box-shadow: 0 5px 0 #063d86, 0 8px 16px rgba(0, 90, 200, 0.28);
+}
+
+.kpis {
+  gap: 18px;
+}
+
+.kpi {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 7px 0 rgba(18, 67, 130, 0.08),
+              0 12px 24px rgba(25, 65, 120, 0.14);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi:nth-child(1) {
+  background: linear-gradient(135deg, #fff0f2, #ffdce4);
+  border-color: #ff9caf;
+}
+.kpi:nth-child(2) {
+  background: linear-gradient(135deg, #eef6ff, #d5e7ff);
+  border-color: #8fc0ff;
+}
+.kpi:nth-child(3) {
+  background: linear-gradient(135deg, #e9fff4, #c8f6df);
+  border-color: #7ee2b3;
+}
+.kpi:nth-child(4) {
+  background: linear-gradient(135deg, #f6efff, #e4d4ff);
+  border-color: #c2a0ff;
+}
+.kpi:nth-child(5) {
+  background: linear-gradient(135deg, #fff8e7, #ffe4b3);
+  border-color: #ffc96b;
+}
+.kpi:nth-child(6) {
+  background: linear-gradient(135deg, #e9fbff, #c8f4fb);
+  border-color: #7bdce9;
+}
+.kpi:nth-child(7) {
+  background: linear-gradient(135deg, #fff0f2, #ffd8df);
+  border-color: #ff9cac;
+}
+.kpi:nth-child(8) {
+  background: linear-gradient(135deg, #effff2, #d0f7d8);
+  border-color: #8cdda0;
+}
+
+.kpi:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 9px 0 rgba(18, 67, 130, 0.08),
+              0 18px 28px rgba(25, 65, 120, 0.2);
+}
+
+.kpi-label {
+  font-size: 16px;
+  font-weight: 800;
+  color: #15365f;
+}
+
+.kpi-value {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #0754ae;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.8);
+}
+
+.kpi-note {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card {
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(18, 65, 130, 0.12);
+  overflow: hidden;
+}
+
+.card-head {
+  background: linear-gradient(135deg, #103f80, #087ac4);
+  color: #fff;
+  padding: 20px 24px;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+button,
+.btn {
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+button:hover,
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 55, 120, 0.2);
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
+  min-height: 44px;
+  border-radius: 10px;
+}
+
+table {
+  font-size: 14px;
+}
+
+th {
+  background: linear-gradient(135deg, #103d75, #1268a8);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+td {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+@media (max-width: 700px) {
+  .header h1 {
+    font-size: 23px;
+  }
+
+  .kpi {
+    padding: 16px;
+  }
+
+  .kpi-label {
+    font-size: 14px;
+  }
+
+  .kpi-value {
+    font-size: 30px;
+  }
+
+  .card-title {
+    font-size: 19px;
+  }
+}
+/* Mobile-friendly larger fonts and controls */
+@media (max-width: 700px) {
+  body {
+    font-size: 17px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .header p {
+    font-size: 16px;
+  }
+
+  .tab,
+  button,
+  .btn {
+    font-size: 16px;
+    min-height: 46px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 17px;
+    min-height: 48px;
+    padding: 12px;
+  }
+
+  table {
+    font-size: 16px;
+  }
+
+  th,
+  td {
+    padding: 14px 12px;
+  }
+
+  .kpi-label {
+    font-size: 15px;
+  }
+
+  .kpi-value {
+    font-size: 32px;
+  }
+
+  .kpi-note {
+    font-size: 14px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+}
+/* ===== EB Tracker 3D Multicolor Header ===== */
+
+.header {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(0, 225, 255, 0.38), transparent 42%),
+    radial-gradient(ellipse at 90% 100%, rgba(190, 70, 255, 0.32), transparent 40%),
+    linear-gradient(115deg, #061b54 0%, #0756b8 28%, #087fc5 52%, #4936a8 76%, #10285f 100%);
+  border-bottom: 3px solid #49e6ff;
+  box-shadow:
+    0 5px 0 #07366e,
+    0 12px 26px rgba(0, 35, 100, 0.35),
+    inset 0 2px 0 rgba(255,255,255,0.28);
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 15%,
+    rgba(255,255,255,0.16) 35%,
+    transparent 48%,
+    rgba(255,255,255,0.08) 65%,
+    transparent 82%
+  );
+}
+
+.header h1 {
+  position: relative;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+  text-shadow:
+    0 2px 0 #07346b,
+    0 4px 0 rgba(0,0,0,0.18),
+    0 7px 14px rgba(0,0,0,0.3);
+}
+
+.header p {
+  position: relative;
+  color: #e1f7ff;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+.header button,
+.header .btn {
+  position: relative;
+  box-shadow:
+    0 4px 0 rgba(0, 25, 75, 0.35),
+    0 7px 14px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+@media (max-width: 700px) {
+  .header h1 {
+    font-size: 23px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+}
+/* Colorful 3D section headings and subtitles */
+
+.card-title {
+  color: #ffdf35;
+  font-size: 23px;
+  font-weight: 900;
+  text-shadow:
+    0 1px 0 #a85b00,
+    0 3px 0 rgba(0,0,0,0.18),
+    0 5px 10px rgba(0,0,0,0.25);
+}
+
+.card-sub,
+.card-head p,
+.card-head .subtitle {
+  color: #e1fbff;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+/* Optional multicolor heading accents */
+.card-title {
+  background: linear-gradient(
+    90deg,
+    #fff176,
+    #ffcf33,
+    #69f0ff
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 700px) {
+  .card-title {
+    font-size: 20px;
+  }
+
+  .card-sub,
+  .card-head p,
+  .card-head .subtitle {
+    font-size: 14px;
+  }
+}
+
+/* Clear, bright and readable section headings */
+
+.card-title {
+  color: #fff !important;
+  background: none !important;
+  -webkit-text-fill-color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  text-shadow:
+    0 1px 0 #174b85,
+    0 3px 0 #073568,
+    0 5px 8px rgba(0,0,0,.45) !important;
+}
+
+/* Highlight key heading words in golden yellow */
+.card-head .card-title {
+  color: #ffe34d !important;
+  -webkit-text-fill-color: #ffe34d !important;
+  text-shadow:
+    0 1px 0 #a45b00,
+    0 3px 0 #713d00,
+    0 5px 9px rgba(0,0,0,.4) !important;
+}
+
+/* Subtitle: bright white/cyan for contrast */
+.card-head .card-sub,
+.card-head p,
+.card-head .subtitle {
+  color: #ffffff !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 5px rgba(0,0,0,.4) !important;
+}
+
+@media (max-width: 700px) {
+  .card-title {
+    font-size: 21px !important;
+  }
+
+  .card-head .card-sub,
+  .card-head p,
+  .card-head .subtitle {
+    font-size: 14px !important;
+  }
+}
+/* ===== Two-Color Premium Top Header ===== */
+
+.header {
+  background: linear-gradient(
+    115deg,
+    #06265f 0%,
+    #0759b7 48%,
+    #08b9d5 100%
+  ) !important;
+  border-bottom: 4px solid #55f2ff !important;
+  box-shadow:
+    0 5px 0 #07366e,
+    0 12px 25px rgba(0, 40, 100, 0.35),
+    inset 0 2px 0 rgba(255,255,255,0.25) !important;
+}
+
+.header h1 {
+  color: #ffffff !important;
+  text-shadow:
+    0 2px 0 #06417c,
+    0 5px 10px rgba(0,0,0,0.35) !important;
+}
+
+.header p {
+  color: #e5fcff !important;
+}
+
+.header .logo,
+.header .brand-logo,
+.header .logo-box {
+  background: linear-gradient(145deg, #12d9ed, #1266d8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.7) !important;
+  box-shadow:
+    0 4px 0 #07366e,
+    0 7px 14px rgba(0,0,0,0.25) !important;
+}
+
+@media (max-width: 700px) {
+  .header h1 {
+    font-size: 23px;
+  }
+}
+
+/* ===== EB TRACKER ROYAL BLUE + GOLD 3D THEME ===== */
+
+.header {
+  background: linear-gradient(110deg, #06245e 0%, #0759b8 48%, #0bb8df 72%, #ffda00 100%) !important;
+  border-bottom: 5px solid #ffdf00 !important;
+  box-shadow: 0 6px 0 #06356f, 0 14px 28px rgba(0,35,90,.32) !important;
+}
+
+.header h1 {
+  color: #fff !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  text-shadow: 0 3px 0 #06417c, 0 6px 12px rgba(0,0,0,.4) !important;
+}
+
+.header p {
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+.header .logo,
+.header .brand-logo,
+.header .logo-box {
+  background: linear-gradient(145deg, #00d9f5, #0870df, #063b93) !important;
+  border: 2px solid #ffe033 !important;
+  box-shadow: 0 5px 0 #06356f, 0 8px 16px rgba(0,0,0,.3) !important;
+}
+
+.card-head {
+  background: linear-gradient(110deg, #06245e 0%, #0759b8 58%, #ffda00 100%) !important;
+  border-bottom: 3px solid #ffd900 !important;
+}
+
+.card-title {
+  color: #ffdf00 !important;
+  background: none !important;
+  -webkit-text-fill-color: #ffdf00 !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 0 #9b5700, 0 4px 7px rgba(0,0,0,.35) !important;
+}
+
+.card-sub,
+.card-head p,
+.card-head .subtitle {
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 5px rgba(0,0,0,.35) !important;
+}
+
+.kpi {
+  border-radius: 18px !important;
+  box-shadow: 0 6px 0 rgba(5,48,105,.10), 0 12px 24px rgba(5,48,105,.15) !important;
+}
+
+.tab.active {
+  background: linear-gradient(145deg, #087cf0, #0647a5) !important;
+  color: #fff !important;
+  border-bottom: 4px solid #ffda00 !important;
+  box-shadow: 0 6px 0 #07366e, 0 9px 15px rgba(0,50,120,.25) !important;
+}
+
+@media (max-width: 700px) {
+  .header h1 { font-size: 23px !important; }
+  .card-title { font-size: 21px !important; }
+  .card-sub,
+  .card-head p { font-size: 14px !important; }
+}
+
+/* ===== Technician Table: Red Delete + Clear Rows ===== */
+
+#technicianTable table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 1px solid #9bb8dc !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#technicianTable th {
+  background: linear-gradient(135deg, #082f6b, #0869ad) !important;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  border: 1px solid #3f78b5 !important;
+  padding: 15px 12px !important;
+}
+
+
+#technicianTable td {
+  color: #17365f !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-right: 1px solid #8ba7c5 !important;
+  border-bottom: 1px solid #8ba7c5 !important;
+  padding: 14px 12px !important;
+  background: #ffffff !important;
+  vertical-align: middle;
+}
+
+#technicianTable tbody tr:nth-child(even) td {
+  background: #eaf3ff !important;
+}
+
+#technicianTable tbody tr:hover td {
+  background: #d4e7ff !important;
+}
+
+
+#technicianTable tbody tr:nth-child(even) td {
+  background: #edf5ff !important;
+}
+
+#technicianTable tbody tr:hover td {
+  background: #dcecff !important;
+}
+
+/* Red 3D Delete button */
+#technicianTable button {
+  font-weight: 800 !important;
+  border-radius: 9px !important;
+}
+
+#technicianTable button[onclick*="delete"],
+#technicianTable button[onclick*="Delete"] {
+  background: linear-gradient(145deg, #ff5a5f, #d90018) !important;
+  color: #ffffff !important;
+  border: 1px solid #b80015 !important;
+  box-shadow: 0 4px 0 #970014,
+              0 6px 10px rgba(190,0,20,.25) !important;
+}
+
+#technicianTable button[onclick*="delete"]:hover,
+#technicianTable button[onclick*="Delete"]:hover {
+  background: linear-gradient(145deg, #ff7478, #c60018) !important;
+  transform: translateY(-2px);
+}
+
+/* Access link field */
+#technicianTable input {
+  color: #123b70 !important;
+  background: #f7fbff !important;
+  border: 1px solid #9bb8dc !important;
+  font-size: 14px !important;
+  border-radius: 9px !important;
+}
+
+/* ===== Fault Records: Clear Rows and Columns ===== */
+
+#faultTable table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 1px solid #9bb8dc !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#faultTable th {
+  background: linear-gradient(135deg, #082f6b, #0869ad) !important;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  border-right: 1px solid #3f78b5 !important;
+  border-bottom: 2px solid #ffda00 !important;
+  padding: 15px 12px !important;
+  white-space: nowrap;
+}
+
+
+#faultTable td {
+  background: #ffffff !important;
+  color: #17365f !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  border-right: 1px solid #8ba7c5 !important;
+  border-bottom: 1px solid #8ba7c5 !important;
+  padding: 14px 12px !important;
+  vertical-align: middle;
+}
+
+
+#faultTable tbody tr:nth-child(even) td {
+  background: #edf5ff !important;
+}
+
+#faultTable tbody tr:hover td {
+  background: #dcecff !important;
+}
+
+#faultTable td:last-child,
+#faultTable th:last-child {
+  border-right: none !important;
+}
+
+#faultTable tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Keep status badges readable */
+#faultTable .badge,
+#faultTable .status-badge {
+  font-weight: 800 !important;
+  white-space: nowrap;
+}
+
+/* Allow wide fault tables to scroll horizontally */
+#faultTable {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Technician Delete Button - Red 3D Style */
+#technicianTable button[onclick*="toggleTechnician"],
+#technicianTable button[onclick*="deleteEBTechnician"] {
+  background: linear-gradient(145deg, #ff4d4d, #c40000) !important;
+  color: #ffffff !important;
+  border: 1px solid #a80000 !important;
+  border-radius: 10px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 0 #850000, 0 5px 10px rgba(180, 0, 0, 0.25) !important;
+  cursor: pointer !important;
+}
+
+#technicianTable button[onclick*="toggleTechnician"]:hover,
+#technicianTable button[onclick*="deleteEBTechnician"]:hover {
+  background: linear-gradient(145deg, #ff2222, #a80000) !important;
+  transform: translateY(-1px);
+}
+
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">EB</div>
+      <div>
+        <div class="title">EB Tracker — Admin Dashboard</div>
+        <div class="subtitle">Fault Management • Site Master • Technician Access</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-light" onclick="refreshAll()">↻ Refresh</button>
+     
+
+<button class="btn-primary" onclick="exportDashboardSummary()">↓ Export Excel CSV</button>
+
+
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div id="message" class="message"></div>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="dashboard" onclick="showView('dashboard',this)">Dashboard</button>
+    <button class="tab" data-view="faults" onclick="showView('faults',this)">Fault Records</button>
+    <button class="tab" data-view="sites" onclick="showView('sites',this)">Site Master</button>
+    <button class="tab" data-view="technicians" onclick="showView('technicians',this)">Technician Links</button>
+    <div style="display:flex;justify-content:flex-end;margin:12px 0;">
+  <button class="btn-primary" onclick="exportAuditHistory()">
+    Export Audit History (Excel)
+  </button>
+</div>
+  </nav>
+
+  <section id="dashboard" class="view active">
+   
+<div class="kpis">
+  <div class="kpi">
+    <div class="kpi-label">Total Open Faults</div>
+    <div class="kpi-value" id="kOpen">0</div>
+    <div class="kpi-note">Currently open</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Total BOQ Raised</div>
+    <div class="kpi-value" id="kBoqRaised">0</div>
+    <div class="kpi-note">Records with BOQ raised</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">BOQ Approved From CMP</div>
+    <div class="kpi-value" id="kBoqCMP">0</div>
+    <div class="kpi-note">CMP approval recorded</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">BOQ Approved From SHQ</div>
+    <div class="kpi-value" id="kBoqSHQ">0</div>
+    <div class="kpi-note">SHQ approval recorded</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Fund Received by CMP</div>
+    <div class="kpi-value" id="kFundCMP">0</div>
+    <div class="kpi-note">Fund receipt date recorded</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Total Minor Work</div>
+    <div class="kpi-value" id="kMinor">0</div>
+    <div class="kpi-note">Minor category records</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Total Major Work</div>
+    <div class="kpi-value" id="kMajor">0</div>
+    <div class="kpi-note">Major category records</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-label">Total Closed Faults</div>
+    <div class="kpi-value" id="kClosed">0</div>
+    <div class="kpi-note">Marked as closed</div>
+  </div>
+</div>
+
+  </section>
+
+  <section id="faults" class="view">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">Fault Records Management</div><div class="card-sub">Search, update status and export records</div></div>
+        <div class="toolbar">
+          <button class="btn-light" onclick="loadFaults()">↻ Reload</button>
+          <button onclick="exportFaults()">↓ Export CSV</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="filters">
+          <div class="field"><label>Search</label><input id="faultSearch" placeholder="Site, technician, fault…" oninput="renderFaults()"></div>
+         
+<div class="field"><label>Status</label><select id="faultStatus" onchange="renderFaults()"><option value="">All Statuses</option><option>Open</option><option>Closed</option></select></div>
+
+          <div class="field"><label>Category</label><select id="faultCategory" onchange="renderFaults()"><option value="">All Categories</option><option>Minor</option><option>Major</option></select></div>
+          <div class="field"><label>Technician</label><select id="faultTech" onchange="renderFaults()"><option value="">All Technicians</option></select></div>
+        </div>
+        <div id="faultCount" class="count"></div>
+        <div id="faultTable" class="loading">Loading records…</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sites" class="view">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">Site Master</div><div class="card-sub">View sites and reassign technicians</div></div>
+        <button class="btn-light" onclick="loadSites()">↻ Reload Sites</button>
+      </div>
+      <div class="card-body">
+       
+        <div class="filters">
+          <div class="field"><label>Search Site / Technician</label><input id="siteSearch" placeholder="Enter site ID or technician…" oninput="renderSites()"></div>
+          <div class="field"><label>Technician Filter</label><select id="siteTechFilter" onchange="renderSites()"><option value="">All Technicians</option></select></div>
+        </div>
+        <div id="siteCount" class="count"></div>
+        <div id="siteTable" class="loading">Loading sites…</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="technicians" class="view">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">Technician Access Links</div><div class="card-sub">Copy or open each technician's access link</div></div>
+        <button class="btn-light" onclick="loadTechnicians()">↻ Reload</button>
+      </div>
+      
+<div class="card-body">
+
+  
+<div class="technician-toolbar">
+  <div class="add-technician-inline">
+    <label for="newTechnicianName">Add New Technician</label>
+    <div class="toolbar-controls">
+      <input id="newTechnicianName" type="text"
+        placeholder="Enter technician's full name" maxlength="100">
+      <button class="btn" type="button" onclick="addTechnician()">
+        + Create Access
+      </button>
+    </div>
+    <div id="addTechMessage" style="margin-top:10px"></div>
+    <div id="newTechLink" style="margin-top:10px"></div>
+  </div>
+  <div class="search-technician-inline">
+    <label for="techSearch">Search Technician</label>
+    <input id="techSearch" placeholder="Search name..."
+      oninput="renderTechnicians()">
+    <div id="techCount" class="count"></div>
+  </div>
+</div>
+
+
+  
+
+  <div id="techCount" class="count"></div>
+  <div id="techTable" class="loading">Loading technician links...</div>
+</div>
+
+    </div>
+  </section>
+</main>
+
+<script>
+  const STATUSES = ['Open', 'Closed'];
+
+  let faults = [];
+  let sites = [];
+  let technicians = [];
+  let summary = {};
+
+  function el(id) { return document.getElementById(id); }
+
+  function showMessage(text, type='success') {
+    const box = el('message');
+    box.className = 'message ' + type;
+    box.textContent = text;
+    box.style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+    setTimeout(() => { box.style.display='none'; }, 5000);
+  }
+
+  function showView(id, button) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el(id).classList.add('active');
+    if (button) button.classList.add('active');
+
+    if (id === 'dashboard') loadDashboard();
+    if (id === 'faults') loadFaults();
+    if (id === 'sites') loadSites();
+    if (id === 'technicians') loadTechnicians();
+  }
+
+  function runServer(functionName, args, onSuccess, onFailure) {
+    let runner = google.script.run
+      .withSuccessHandler(onSuccess || function(){})
+      .withFailureHandler(onFailure || function(err) {
+        showMessage(err && err.message ? err.message : String(err), 'error');
+      });
+    runner[functionName].apply(runner, args || []);
+  }
+
+  function asArray(data) {
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.records)) return data.records;
+    if (data && Array.isArray(data.data)) return data.data;
+    return [];
+  }
+
+  function pick(obj, keys, fallback='') {
+    if (!obj) return fallback;
+    for (const k of keys) {
+      if (obj[k] !== undefined && obj[k] !== null) return obj[k];
+    }
+    return fallback;
+  }
+
+  function normFault(r) {
+    if (Array.isArray(r)) {
+      return {
+        recordId:r[0],siteId:r[1],technicianName:r[2],siteType:r[3],
+        faultDate:r[4],faultType:r[5],qty:r[6],estimatedCost:r[7],
+        fundReceivedDate:r[8],closedDate:r[9],category:r[10],
+        remarks:r[11],cmp:r[12],boqRaisedAmount:r[13],
+        boqApprovedCMP:r[14],boqApprovedSHQ:r[15],
+        fundReceivedCMP:r[16],postWorkPicture:r[17],
+        onePagerStatus:r[18],status:r[19],createdAt:r[20],updatedAt:r[21]
+      };
+    }
+    return {
+      recordId:pick(r,['recordId','Record ID','record_id','id']),
+      siteId:pick(r,['siteId','siteID','Site ID','site_id']),
+      technicianName:pick(r,['technicianName','Technician Name','technician','name']),
+      siteType:pick(r,['siteType','Site Type']),
+      faultDate:pick(r,['faultDate','Fault Date']),
+      faultType:pick(r,['faultType','Fault Type']),
+      qty:pick(r,['qty','quantity','Qty. Mtr./No.']),
+      estimatedCost:pick(r,['estimatedCost','Estimated Cost']),
+      fundReceivedDate:pick(r,['fundReceivedDate','Fund Received by Technician Date']),
+      closedDate:pick(r,['closedDate','Closed Date']),
+      category:pick(r,['category','Category']),
+      remarks:pick(r,['remarks','Remarks']),
+      cmp:pick(r,['cmp','CMP']),
+      boqRaisedAmount:pick(r,['boqRaisedAmount','BOQ Raised Amount']),
+      boqApprovedCMP:pick(r,['boqApprovedCMP','BOQ Approved From CMP']),
+      boqApprovedSHQ:pick(r,['boqApprovedSHQ','BOQ Approved From SHQ']),
+      fundReceivedCMP:pick(r,['fundReceivedCMP','Fund Received by CMP Date']),
+      postWorkPicture:pick(r,['postWorkPicture','Post Work Picture']),
+      onePagerStatus:pick(r,['onePagerStatus','One Pager Status']),
+      status:pick(r,['status','Status'],'Open'),
+      createdAt:pick(r,['createdAt','Created At']),
+      updatedAt:pick(r,['updatedAt','Updated At'])
+    };
+  }
+
+  function normSite(r) {
+    if (Array.isArray(r)) return {siteId:r[0],technicianName:r[1],siteType:r[2]};
+    return {
+      siteId:pick(r,['siteId','siteID','Site ID','site']),
+      technicianName:pick(r,['technicianName','Technician Name','technician','name']),
+      siteType:pick(r,['siteType','Site Type'])
+    };
+  }
+
+  function normTech(r) {
+    if (Array.isArray(r)) return {name:r[0],token:r[1],active:r[2],siteCount:r[3]};
+    return {
+      name:pick(r,['technicianName','name','Technician Name']),
+      token:pick(r,['token','accessToken','Access Token']),
+      active:pick(r,['active','Active'],'Yes'),
+      siteCount:pick(r,['siteCount','Site Count'],0),
+      url:pick(r,['url','link','accessUrl'])
+    };
+  }
+function loadDashboard() {
+  runServer('getEBAdminSummary', [], data => {
+    const summary = data || {};
+
+    el('kOpen').textContent = summary.open ?? 0;
+    el('kBoqRaised').textContent = summary.boqRaised ?? 0;
+    el('kBoqCMP').textContent = summary.boqApprovedCMP ?? 0;
+    el('kBoqSHQ').textContent = summary.boqApprovedSHQ ?? 0;
+    el('kFundCMP').textContent = summary.fundReceivedCMP ?? 0;
+    el('kMinor').textContent = summary.minor ?? 0;
+    el('kMajor').textContent = summary.major ?? 0;
+    el('kClosed').textContent = summary.closed ?? 0;
+  }, () => {
+    el('kOpen').textContent = 'Error';
+    el('kBoqRaised').textContent = 'Error';
+    el('kBoqCMP').textContent = 'Error';
+    el('kBoqSHQ').textContent = 'Error';
+    el('kFundCMP').textContent = 'Error';
+    el('kMinor').textContent = 'Error';
+    el('kMajor').textContent = 'Error';
+    el('kClosed').textContent = 'Error';
+  });
+}
+
+function exportDashboardSummary() {
+  runServer('getEBAdminSummary', [], summary => {
+    summary = summary || {};
+
+    const headers = ['Dashboard KPI', 'Count'];
+    const rows = [
+      ['Total Open Faults', summary.open ?? 0],
+      ['Total BOQ Raised', summary.boqRaised ?? 0],
+      ['BOQ Approved From CMP', summary.boqApprovedCMP ?? 0],
+      ['BOQ Approved From SHQ', summary.boqApprovedSHQ ?? 0],
+      ['Fund Received by CMP', summary.fundReceivedCMP ?? 0],
+      ['Total Minor Work', summary.minor ?? 0],
+      ['Total Major Work', summary.major ?? 0],
+      ['Total Closed Faults', summary.closed ?? 0]
+    ];
+
+    downloadCSV('EB_Dashboard_Summary.csv', headers, rows);
+  }, () => {
+    showMessage('Dashboard summary export failed.', 'error');
+  });
+}
+
+
+  function loadFaults() {
+    el('faultTable').innerHTML = '<div class="loading">Loading fault records…</div>';
+    runServer('getEBAdminFaultRecords', [], data => {
+      faults = asArray(data).map(normFault);
+      updateTechnicianFilters();
+      renderFaults();
+      loadDashboard();
+    });
+  }
+
+  function loadRecentTable() {
+    const recent = faults.slice().reverse().slice(0,8);
+    if (!recent.length) {
+      el('recentTable').innerHTML = '<div class="empty">No fault records found.</div>';
+      return;
+    }
+    el('recentTable').innerHTML = tableHTML(
+      ['Record ID','Site ID','Technician','Fault Type','Fault Date','Status'],
+      recent.map(f=>[
+        esc(f.recordId),esc(f.siteId),esc(f.technicianName),
+        esc(f.faultType),esc(f.faultDate),statusBadge(f.status)
+      ])
+    );
+  }
+
+function renderFaults() {
+  const q = el('faultSearch').value.trim().toLowerCase();
+  const st = el('faultStatus').value;
+  const cat = el('faultCategory').value;
+  const tech = el('faultTech').value;
+
+  const filtered = faults.filter(f => {
+    const searchable = [
+      f.recordId, f.siteId, f.technicianName, f.siteType,
+      f.faultType, f.remarks, f.cmp
+    ].join(' ').toLowerCase();
+
+    return (!q || searchable.includes(q)) &&
+      (!st || String(f.status) === st) &&
+      (!cat || String(f.category) === cat) &&
+      (!tech || String(f.technicianName) === tech);
+  });
+
+  el('faultCount').textContent = filtered.length + ' record(s)';
+
+  if (!filtered.length) {
+    el('faultTable').innerHTML =
+      '<div class="empty">No matching records found.</div>';
+    return;
+  }
+
+  const headers = [
+    'Record ID',
+    'Site ID',
+    'Technician Name',
+    'Site Type',
+    'Fault Date',
+    'Fault Type',
+    'Qty. Mtr./No.',
+    'Estimated Cost',
+    'Fund Received by Technician Date',
+    'Closed Date',
+    'Category',
+    'Remarks',
+    'CMP',
+    'BOQ Raised Amount',
+    'BOQ Approved From CMP',
+    'BOQ Approved From SHQ',
+    'Fund Received by CMP Date',
+    'Post Work Picture',
+    'One Pager Status',
+    'Status',
+    'Action'
+  ];
+
+  const rows = filtered.map(f => {
+    const id = attr(f.recordId);
+    const key = safeId(f.recordId);
+
+    const yesNoSelect = (elementId, value, label) =>
+      '<select id="' + elementId + '_' + key + '">' +
+      '<option value="">Select ' + label + '</option>' +
+      '<option value="Yes" ' + (value === 'Yes' ? 'selected' : '') +
+      '>Yes</option>' +
+      '<option value="No" ' + (value === 'No' ? 'selected' : '') +
+      '>No</option></select>';
+
+    return [
+      esc(f.recordId),
+      esc(f.siteId),
+      esc(f.technicianName),
+      esc(f.siteType),
+      esc(f.faultDate),
+      esc(f.faultType),
+      esc(f.qty),
+      esc(f.estimatedCost),
+
+      '<input id="fundTech_' + key +
+'" type="date" value="' + dateInput(f.fundReceivedDate) + '" disabled>',
+
+      '<input id="closed_' + key +
+      '" type="date" value="' + dateInput(f.closedDate) + '">',
+
+      esc(f.category),
+
+      '<input id="remarks_' + key +
+      '" value="' + attr(f.remarks) + '" placeholder="Remarks">',
+
+      esc(f.cmp),
+
+      '<input id="boqAmount_' + key +
+      '" type="number" min="0" placeholder="BOQ Raised Amount" value="' +
+      attr(f.boqRaisedAmount) + '">',
+
+      yesNoSelect('boqCMP', f.boqApprovedCMP, 'CMP Approval'),
+      yesNoSelect('boqSHQ', f.boqApprovedSHQ, 'SHQ Approval'),
+
+      '<input id="fundCMP_' + key +
+      '" type="date" value="' + dateInput(f.fundReceivedCMP) + '">',
+
+      yesNoSelect('postWork', f.postWorkPicture, 'Post Work Picture'),
+
+      yesNoSelect('onePager', f.onePagerStatus, 'One Pager Status'),
+
+      '<select id="status_' + key + '">' +
+      STATUSES.map(s =>
+        '<option value="' + attr(s) + '" ' +
+        (s === f.status ? 'selected' : '') + '>' +
+        esc(s) + '</option>'
+      ).join('') +
+      '</select>',
+
+      esc(f.createdAt),
+      esc(f.updatedAt),
+
+      '<button class="btn-small" onclick="saveFault(\'' +
+      jsq(f.recordId) + '\')">Save</button>'
+    ];
+  });
+
+  el('faultTable').innerHTML = tableHTML(headers, rows);
+}
+
+function saveFault(recordId) {
+  const key = safeId(recordId);
+  const status = el('status_' + key);
+
+  if (!status) {
+    return showMessage('Record controls not found. Reload records.', 'error');
+  }
+
+  const updates = {
+    'Fund Received by Technician Date':
+      el('fundTech_' + key)?.value || '',
+    'Closed Date':
+      el('closed_' + key)?.value || '',
+    'Remarks':
+      el('remarks_' + key)?.value || '',
+    'BOQ Raised Amount':
+      el('boqAmount_' + key)?.value || '',
+    'BOQ Approved From CMP':
+      el('boqCMP_' + key)?.value || '',
+    'BOQ Approved From SHQ':
+      el('boqSHQ_' + key)?.value || '',
+    'Fund Received by CMP Date':
+      el('fundCMP_' + key)?.value || '',
+    'Post Work Picture':
+      el('postWork_' + key)?.value || '',
+    'Status':
+      status.value
+  };
+
+  runServer('updateEBAdminFault', [recordId, updates], () => {
+    showMessage('Fault record updated successfully.');
+    loadFaults();
+  });
+}
+
+  function loadSites() {
+    el('siteTable').innerHTML = '<div class="loading">Loading site master…</div>';
+    runServer('getEBAdminSiteMasterData', [], data => {
+      sites = asArray(data).map(normSite);
+      updateTechnicianFilters();
+      renderSites();
+      loadDashboard();
+    });
+  }
+
+  function renderSites() {
+    const q = el('siteSearch').value.trim().toLowerCase();
+    const tech = el('siteTechFilter').value;
+    const filtered = sites.filter(s =>
+      (!q || [s.siteId,s.technicianName,s.siteType].join(' ').toLowerCase().includes(q)) &&
+      (!tech || String(s.technicianName)===tech)
+    );
+
+    el('siteCount').textContent = filtered.length + ' site(s)';
+    if (!filtered.length) {
+      el('siteTable').innerHTML = '<div class="empty">No matching sites found.</div>';
+      return;
+    }
+
+    const techNames = technicians.map(t=>t.name).filter(Boolean);
+    const rows = filtered.map((s,i) => {
+      const selectId = 'siteTech_'+i;
+      return [
+        esc(s.siteId),
+        esc(s.siteType),
+        esc(s.technicianName),
+        '<select id="'+selectId+'"><option value="">Select technician</option>'+
+          techNames.map(n=>'<option '+(n===s.technicianName?'selected':'')+' value="'+attr(n)+'">'+esc(n)+'</option>').join('')+
+          '</select>',
+        '<button class="btn-small" onclick="saveSite(\''+jsq(s.siteId)+'\',\''+selectId+'\')">Save</button>'
+      ];
+    });
+    el('siteTable').innerHTML = tableHTML(['Site ID','Site Type','Current Technician','Assign Technician','Action'],rows);
+  }
+
+  function saveSite(siteId, selectId) {
+    const select = el(selectId);
+    if (!select || !select.value) return showMessage('Please select a technician.','error');
+    if (!confirm('Assign '+siteId+' to '+select.value+'?')) return;
+
+    runServer('updateEBSiteTechnician',[siteId,select.value], result => {
+      showMessage('Site technician updated.');
+      loadSites();
+    });
+  }
+
+  function loadTechnicians() {
+    el('techTable').innerHTML = '<div class="loading">Loading technician access…</div>';
+    runServer('getEBTechnicianLinks', [], data => {
+      technicians = asArray(data).map(normTech);
+      updateTechnicianFilters();
+      renderTechnicians();
+      renderSites();
+    });
+  }
+
+  function renderTechnicians() {
+    const q = el('techSearch').value.trim().toLowerCase();
+    const filtered = technicians.filter(t => [t.name,t.active].join(' ').toLowerCase().includes(q));
+    el('techCount').textContent = filtered.length + ' technician(s)';
+
+    if (!filtered.length) {
+      el('techTable').innerHTML = '<div class="empty">No technician access records found.</div>';
+      return;
+    }
+
+    const rows = filtered.map(t => {
+     const url = t.url || t.link || (t.token ? appUrl()+'?token='+encodeURIComponent(t.token) : '');
+      return [
+        esc(t.name),
+        esc(t.siteCount),
+        esc(t.active),
+ 
+'<button class="btn-small btn-danger" type="button" onclick=\'window.toggleTechnician(' +
+JSON.stringify(JSON.stringify(t.name)) + ', false)\'>Delete</button>',
+        url ? '<input readonly value="'+attr(url)+'" id="link_'+safeId(t.name)+'">' : '<span class="muted">No token/link returned</span>',
+        url ? '<div class="toolbar"><button class="btn-small" onclick="copyLink(\''+jsq(t.name)+'\')">Copy Link</button><button class="btn-small btn-light" onclick="openLink(\''+jsq(url)+'\')">Open</button></div>' : '—'
+      ];
+    });
+    el('techTable').innerHTML = tableHTML(['Technician','Site Count','Active','Access Link','Actions'],rows);
+  }
+
+function addTechnician() {
+  const input = el("newTechnicianName");
+  const message = el("addTechMessage");
+  const linkBox = el("newTechLink");
+  const name = input.value.trim();
+
+  message.textContent = "";
+  linkBox.innerHTML = "";
+
+  if (!name) {
+    message.textContent = "Please enter technician name.";
+    message.style.color = "#b91c1c";
+    return;
+  }
+
+  message.textContent = "Creating technician access...";
+  message.style.color = "#1769aa";
+
+  runServer("addEBTechnician", [name], result => {
+    message.textContent = result.message || "Technician access created.";
+    message.style.color = "#15803d";
+
+    if (result.link) {
+      linkBox.innerHTML =
+        '<input readonly style="width:100%;margin:8px 0" value="' +
+        attr(result.link) + '">' +
+        '<button class="btn" type="button" onclick="copyText(' +
+        JSON.stringify(result.link) + ')">Copy Link</button>';
+    }
+
+    input.value = "";
+    loadTechnicians();
+    loadDashboard();
+  });
+}
+
+
+window.toggleTechnician = function(technicianName, active) {
+
+  if (!window.confirm(
+    "Are you sure you want to permanently delete technician: " +
+    technicianName +
+    "?\n\nHistorical fault records will be preserved."
+  )) {
+    return;
+  }
+
+  runServer(
+    "deleteEBTechnician",
+    [technicianName],
+    function(result) {
+      showMessage(
+        (result && result.message) || "Technician deleted successfully.",
+        "success"
+      );
+      loadTechnicians();
+      loadSites();
+      loadDashboard();
+    },
+    function(err) {
+      showMessage(
+        "Delete failed: " +
+        ((err && err.message) ? err.message : String(err)),
+        "error"
+      );
+    }
+  );
+}
+
+
+
+
+  function updateTechnicianFilters() {
+    const names = [...new Set([
+      ...technicians.map(t=>t.name),
+      ...faults.map(f=>f.technicianName),
+      ...sites.map(s=>s.technicianName)
+    ].filter(Boolean))].sort();
+
+    setOptions('faultTech',names,'All Technicians');
+    setOptions('siteTechFilter',names,'All Technicians');
+  }
+
+  function setOptions(id, names, firstLabel) {
+    const node = el(id);
+    if (!node) return;
+    const previous = node.value;
+    node.innerHTML = '<option value="">'+esc(firstLabel)+'</option>'+
+      names.map(n=>'<option value="'+attr(n)+'">'+esc(n)+'</option>').join('');
+    if (names.includes(previous)) node.value = previous;
+  }
+
+  function tableHTML(headers, rows) {
+    return '<div class="table-wrap"><table><thead><tr>'+
+      headers.map(h=>'<th>'+h+'</th>').join('')+
+      '</tr></thead><tbody>'+
+      rows.map(row=>'<tr>'+row.map(cell=>'<td>'+cell+'</td>').join('')+'</tr>').join('')+
+      '</tbody></table></div>';
+  }
+
+  function statusBadge(status) {
+    const s = String(status || 'Open');
+    let cls = '';
+    if (s==='Closed') cls='status-closed';
+    else if (s==='Open') cls='status-open';
+    else if (s==='In Progress') cls='status-progress';
+    return '<span class="status '+cls+'">'+esc(s)+'</span>';
+  }
+
+  function dateInput(value) {
+    if (!value) return '';
+    const s = String(value);
+    const match = s.match(/^(\d{4}-\d{2}-\d{2})/);
+    return match ? match[1] : '';
+  }
+
+  function appUrl() {
+    return window.location.href.split('?')[0];
+  }
+
+  function copyLink(name) {
+    const input = el('link_'+safeId(name));
+    if (!input) return;
+    input.select();
+    input.setSelectionRange(0,99999);
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(input.value).then(
+        ()=>showMessage('Access link copied.'),
+        ()=>{ document.execCommand('copy'); showMessage('Access link copied.'); }
+      );
+    } else {
+      document.execCommand('copy');
+      showMessage('Access link copied.');
+    }
+  }
+
+  function openLink(url) {
+    window.open(url,'_blank','noopener');
+  }
+
+  function exportFaults() {
+    if (!faults.length) return showMessage('No fault records available to export.','error');
+    const headers = [
+      'Record ID','Site ID','Technician Name','Site Type','Fault Date',
+      'Fault Type','Qty. Mtr./No.','Estimated Cost',
+      'Fund Received by Technician Date','Closed Date','Category','Remarks',
+      'CMP','BOQ Raised Amount','BOQ Approved From CMP','BOQ Approved From SHQ',
+      'Fund Received by CMP Date','Post Work Picture','One Pager Status',
+      'Status'
+    ];
+    const rows = faults.map(f=>[
+      f.recordId,f.siteId,f.technicianName,f.siteType,f.faultDate,
+      f.faultType,f.qty,f.estimatedCost,f.fundReceivedDate,f.closedDate,
+      f.category,f.remarks,f.cmp,f.boqRaisedAmount,f.boqApprovedCMP,
+      f.boqApprovedSHQ,f.fundReceivedCMP,f.postWorkPicture,
+      f.onePagerStatus, f.status
+    ]);
+    downloadCSV('EB_Fault_Records.csv',headers,rows);
+  }
+
+  function downloadCSV(filename,headers,rows) {
+    const csv = [headers,...rows].map(row=>row.map(v=>{
+      let s = v===null || v===undefined ? '' : String(v);
+      if (/^[=+\-@]/.test(s)) s = "'"+s;
+      return '"'+s.replace(/"/g,'""')+'"';
+    }).join(',')).join('\r\n');
+    const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url;a.download=filename;
+    document.body.appendChild(a);a.click();a.remove();
+    URL.revokeObjectURL(url);
+    showMessage('CSV export downloaded. Open it in Excel.');
+  }
+
+  function refreshAll() {
+    loadTechnicians();
+    loadSites();
+    loadFaults();
+  }
+
+  function safeId(value) {
+    return String(value ?? '').replace(/[^a-zA-Z0-9_-]/g,'_');
+  }
+
+  function esc(value) {
+    return String(value===null || value===undefined ? '' : value)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function attr(value) { return esc(value); }
+  function jsq(value) {
+    return String(value===null || value===undefined ? '' : value)
+      .replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r/g,' ').replace(/\n/g,' ');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshAll();
+  });
+</script>
+</body>
+</html>
