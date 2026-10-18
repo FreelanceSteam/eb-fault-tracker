@@ -107,7 +107,12 @@ const technicianLink = token
   ? "https://script.google.com/macros/s/AKfycby6JeKwcW9kNGFD47pOJ4tp0uGMrnu6jnBrP6C8YaTNtoyurgJ7381B8ZK3UqkfylqjOA/exec?token=" + encodeURIComponent(token)
   : "";
 
-document.getElementById('openBtn').addEventListener('click',()=>{
+document.getElementById('openBtn').addEventListener('click', () => {
+  if (!token) {
+    alert('Invalid technician link. Please use your individual access link.');
+    return;
+  }
+
   window.location.href = technicianLink;
 });
 
