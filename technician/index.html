@@ -100,38 +100,10 @@ button:active{transform:scale(.99)}
 </main>
 
 <script>
+const technicianLink = "https://script.google.com/macros/s/AKfycby6JeKwcW9kNGFD47pOJ4tp0uGMrnu6jnBrP6C8YaTNtoyurgJ7381B8ZK3UqkfylqjOA/exec?token=fc9f8315-d813-46b5-b62c-42c50cd12396";
+
 document.getElementById('openBtn').addEventListener('click',()=>{
-  let value='';
-
-  try{
-    value=localStorage.getItem('ebTechAccessLink')||'';
-  }catch(e){}
-
-  if(!value){
-    alert('Technician access link is not saved on this device. Please open the previous version once and save your individual link.');
-    return;
-  }
-
-  let url;
-
-  try{
-    url=new URL(value);
-  }catch(e){
-    alert('Saved Technician link is invalid. Please save the correct individual access link.');
-    return;
-  }
-
-  if(
-    url.protocol!=='https:' ||
-    url.hostname!=='script.google.com' ||
-    !url.pathname.includes('/macros/s/') ||
-    !url.searchParams.has('token')
-  ){
-    alert('Saved Technician link is invalid. Please use your original individual access link.');
-    return;
-  }
-
-  location.href=url.href;
+  window.location.href = technicianLink;
 });
 
 if('serviceWorker' in navigator){
