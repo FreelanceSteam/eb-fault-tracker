@@ -1,0 +1,32 @@
+{
+  "id": "/eb-fault-tracker/",
+  "name": "EB Fault Tracker",
+  "short_name": "EB Tracker",
+  "description": "Technician and Admin launcher for EB Fault Tracker",
+  "start_url": "/eb-fault-tracker/",
+  "scope": "/eb-fault-tracker/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#eef5ff",
+  "theme_color": "#06245e",
+  "icons": [
+    {
+      "src": "app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "technician-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "admin-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
